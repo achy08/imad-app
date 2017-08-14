@@ -14,7 +14,6 @@ var config = {
 var app = express();
 app.use(morgan('combined'));
 
-va
 
 var articles = {
   'article-one': {
