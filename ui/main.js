@@ -16,7 +16,7 @@ button.onclick = function(){
     //Not done yet
     };
     //Make a request to the counter
-    request.open('GET', 'http://localhost:8080/counter', true);
+    request.open('GET', 'http://achy007mails.imad.hasura-app.io/counter', true);
     request.send(null);
 }
 
