@@ -13,7 +13,7 @@ submit.onclick = function(){
                 for(var i =0 ; i < comments.length; i++){
                     list += '<li>'+ comments[i] + '</li>';
                 }
-                var ul = document.getElementById('commentList')
+                var ul = document.getElementById('commentList');
                 ul.innerHTML = list;
             }
         }
@@ -22,6 +22,6 @@ submit.onclick = function(){
     //Submit comment
     var commentInput = document.getElementById('comment');
     var comment = commentInput.value;
-    request.open('GET', 'http://localhost:8080/submit-comment?comment=' + comment, true);
+    request.open('GET', 'http://achy007mails.imad.hasura-app.io/submit-comment?comment=' + comment, true);
     request.send(null);    
-}
+};
