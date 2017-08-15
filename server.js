@@ -64,7 +64,7 @@ function createTemplate(data){
           <head>
             <meta name=viewport content="width=device-width initial-scale=1">
             <title>${title}</title>
-            <link href="/ui/style.css" rel="stylesheet" />	
+            <link href="/ui/style.css" rel="stylesheet" />
           </head>
           <body>
               <div class="container">
@@ -93,6 +93,7 @@ function createTemplate(data){
                     </ul>
             </div>
             </div>
+            <script type="text/javascript" src="/ui/main.js"></script>
             <script type="text/javascript" src="/ui/article.js"></script>
           </body>
         </html>
