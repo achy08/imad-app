@@ -14,45 +14,6 @@ var config = {
 var app = express();
 app.use(morgan('combined'));
 
-
-var articles = {
-  'article-one': {
-    	title: 'Article one | Abhishek C',
-	    heading: 'Something Somewhere Someone',
-      date: 'Someday, Someyear',
-      content: `
-
-            <p>
-                  Once upon a time, someone who lived somewhere did something.
-            </p>`
-
-  },
-
-  'article-two': {
-      title: 'Article two | Abhishek C',
-	    heading: 'Something Somewhere Someone',
-      date: 'Somedays ago, Someyear',
-      content: `
-
-            <p>
-                  Second article about something else by someone else
-            </p>`
-},
-
-  'article-three': {
-        	title: 'Article Three | Abhishek C',
-	    heading: 'Somehow Somewhere Someone',
-      date: 'Someday, Someyears',
-      content: `
-
-            <p>
-              There were somethings going somewhere
-            </p>`
-  }
-          
-
-};
-
 function createTemplate(data){
   var title = data.title;
   var heading = data.heading;
@@ -135,7 +96,8 @@ app.get('/counter', function(req, res){
 app.get('/article/:articleName', function (req,res){
     //articleName == article-one
     //articles[articleName] == {} content object for article-one
-    pool.query("SELECT * FROM articles WHERE title = '"+ req.params.articleName + "'", function(err,result){
+    //use query below so that hackers cannot inject SQL
+    pool.query("SELECT * FROM articles WHERE title = $1", [req.params.articleName], function(err,result){
         if(err){
             res.status(500).send(err.toString());
         } else {
