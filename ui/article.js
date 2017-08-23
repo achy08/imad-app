@@ -1,4 +1,4 @@
-var submit = document.getElementById('submit_btn');
+/* var submit = document.getElementById('submit_btn');
 submit.onclick = function(){
     //Create a request object
     var request = new XMLHttpRequest();
@@ -22,6 +22,10 @@ submit.onclick = function(){
     //Submit comment
     var commentInput = document.getElementById('comment');
     var comment = commentInput.value;
-    request.open('GET', 'http://achy007mails.imad.hasura-app.io/submit-comment?comment=' + comment, true);
+    //Make a request to the counter. use below if running on hasura-app
+    //request.open('GET', 'http://achy007mails.imad.hasura-app.io/submit-comment?comment=' + comment, true);
+
+    //Make a request, use below if running on localhost
+    request.open('GET', 'http://localhost/submit-comment?comment=' + comment, true);
     request.send(null);    
-};
+}; */

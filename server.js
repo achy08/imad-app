@@ -2,17 +2,25 @@ var express = require('express');
 var morgan = require('morgan');
 var path = require('path');
 var Pool = require('pg').Pool;
+var crypto = require('crypto');
+var bodyParser = require('body-parser');
+var session = require('express-session');
 
 var config = {
-    user: 'achy007mails',
-    database: 'achy007mails',
-    host: "db.imad.hasura-app.io",
+    user: 'achy08',
+    database: 'imad-articles',
+    host: "localhost",
     port:'5432',
-    password: process.env.DB_PASSWORD
+    password: 'chy_A_08'
 };
 
 var app = express();
 app.use(morgan('combined'));
+app.use(bodyParser.json());
+app.use(session({
+    secret: 'oneRandomSecretValue',
+    cookie: {maxAge: 1000 * 60 * 60 * 24 * 30}
+}));
 
 function createTemplate(data){
   var title = data.title;
@@ -67,12 +75,84 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'ui', 'index.html'));
 });
 
+function hash(input, salt){
+    //How to create a hash?
+    var hashed = crypto.pbkdf2Sync(input, salt, 10000, 512, 'sha512');
+    return ["pbkdf2","10000", salt, hashed.toString('hex')].join('$');
+}
+app.get('/hash/:input', function(req,res){
+    var hashedString = hash(req.params.input, 'this-is-a-random-string');
+    res.send(hashedString);
+});
+
 var comments = [];
 app.get('/submit-comment', function(req,res){
   var comment = req.query.comment;
   comments.push(comment);
   res.send(JSON.stringify(comments));
 });
+
+app.post('/new-user', function(req,res){
+    //username, password
+    //JSON
+    var username = req.body.username;
+    var password = req.body.password;
+    
+    //SALTED HASH and add to DB
+    var salt = crypto.randomBytes(128).toString();
+    var dbString = hash(password, salt);
+    pool.query('INSERT INTO "user"(username, password) VALUES ($1, $2)', 
+    [username, dbString], function(err, result){
+        if (err){
+            res.status(500).send(err.toString());
+        } else{
+            res.send('New user created:' + username);
+        }  
+    });
+});
+
+app.post('/login', function(req, res){
+    var username = req.body.username;
+    var password = req.body.password;
+
+    pool.query('SELECT * FROM "user" WHERE username = $1', [username], function(err, result){
+        if (err){
+            res.status(500).send(err.toString());
+        } else{
+            if(result.rows.length === 0){
+                res.send(403).send('invalid user');
+            } else{
+                //Match password
+                var dbString = result.rows[0].password;
+                var salt = dbString.split('$')[2];
+
+                //Create hash based on the submitted password and original salt to compare with salted hash in DB
+                var hashedPassword = hash(password, salt);
+                if (hashedPassword === dbString){
+                    //Set session
+                    req.session.auth = {userId: result.rows[0].id}
+                    res.send('Successful Login');
+                } else{
+                    res.send(403).send('wrong info')
+                }
+            }
+        }  
+    });
+});
+
+app.get('/check-login', function (req,res){
+    if (req.session && req.session.auth && req.session.auth.userId){
+        res.send('Logged in with user id:' + req.session.auth.userId.toString());
+    } else {
+        res.send('No one home')
+    }
+});
+
+app.get('/logout', function(req, res){
+    // end session
+    delete req.session.auth;
+    res.send('Logged out now')
+})
 
 var pool = new Pool(config);
 app.get('/test-db', function(req, res){
