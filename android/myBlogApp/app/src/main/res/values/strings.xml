@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">myBlogApp</string>
+    <string name="ent_username_hint">What is your username?</string>
+    <string name="ent_password_hint">There has to be a password</string>
+    <string name="btn_signIn">Login</string>
+    <string name="btn_Register">Register New User</string>
+</resources>
