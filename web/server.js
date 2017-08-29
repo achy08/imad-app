@@ -11,7 +11,7 @@ var config = {
     database: 'imad-articles',
     host: "localhost",
     port:'5432',
-    password: 'xxxx'
+    password: 'xxxxx'
 };
 
 var app = express();
