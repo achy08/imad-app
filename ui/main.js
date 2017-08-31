@@ -20,7 +20,7 @@ button.onclick = function(){
     //request.open('GET', 'http://achy007mails.imad.hasura-app.io/counter', true);
 
     //Make a request, use below if running on localhost;
-    request.open('GET', 'http://localhost/counter', true);
+    request.open('GET', 'http://../counter', true);
     request.send(null);
 };
 
@@ -56,7 +56,7 @@ submit.onclick = function(){
     //request.open('GET', 'http://achy007mails.imad.hasura-app.io/submit-comment?comment=' + comment, true);
 
     //Make a request, use below if running on localhost
-    request.open('POST', 'http://localhost/login', true);
+    request.open('POST', 'http://../login', true);
     request.setRequestHeader('Content-Type', 'application/json');
     request.send(JSON.stringify({username: username, password: password}));    
 };
